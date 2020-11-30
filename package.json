@@ -1,0 +1,20 @@
+{
+  "name": "lookie",
+  "version": "0.3.0",
+  "description": "LocalStorage with expiry time support.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aykutkardas/lookie.git"
+  },
+  "keywords": ["localStorage", "cookie", "utils", "expiry"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aykutkardas/lookie/issues"
+  },
+  "homepage": "https://github.com/aykutkardas/lookie#readme"
+}
