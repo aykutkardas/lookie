@@ -24,7 +24,7 @@ class Lookie {
     const expiry = now + expiryTimeMs;
 
     let data = value;
-   
+
     if (expiryTimeMs) {
       data = JSON.stringify({
         value,
@@ -45,7 +45,7 @@ class Lookie {
     try {
       const item = JSON.parse(dataStr);
       const now = new Date().getTime();
-      
+
       if (item.expiry) {
         if (now > item.expiry) {
           localStorage.removeItem(key);
@@ -54,12 +54,11 @@ class Lookie {
       } else {
         return item;
       }
-  
+
       return item.value;
-    } catch () {
+    } catch (err) {
       return dataStr;
     }
-
   }
 
   static getTimeTable(): TimeObjType {
