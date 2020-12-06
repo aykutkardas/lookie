@@ -61,6 +61,10 @@ class Lookie {
     }
   }
 
+  static remove(key: string) {
+    localStorage.removeItem(key);
+  }
+
   static getTimeTable(): TimeObjType {
     return {
       Y: 31556926,

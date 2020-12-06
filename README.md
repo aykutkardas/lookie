@@ -38,6 +38,11 @@ lookie.set("key", value, "10s"); // 10 seconds
 lookie.get("key");
 ```
 
+### Remove
+```js
+lookie.remove("key");
+```
+
 ## Advanced
 
 ```js
@@ -51,7 +56,7 @@ lookie.set("key", value, "1M 15D 7h");
 ### Available Time Ranges
 
 | Key | Name   |
-| --- | ------ |
+|-----|--------|
 | Y   | Year   |
 | M   | Month  |
 | D   | Day    |
