@@ -19,14 +19,16 @@ import lookie from "lookie";
 ### Set
 
 ```js
+lookie.set("key", value);
+```
+
+### Set (with Expiry)
+
+```js
 lookie.set("key", value, 10000); // 10 seconds
-```
 
-```js
 lookie.set("key", value, { s: 10 }); // 10 seconds
-```
 
-```js
 lookie.set("key", value, "10s"); // 10 seconds
 ```
 
