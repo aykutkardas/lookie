@@ -1,11 +1,26 @@
-type TimeObjType = { [key: string]: number };
+type MSTimeTableType = { [key: string]: number };
+
+type TimeObjToMSFuncType = (timeObj: MSTimeTableType) => number;
+type StringToMSFuncType = (timeStr: string) => number;
+type GetFuncType = (key: string) => any;
+type RemoveFuncType = (key: string) => void;
+type SetFuncType = (
+  key: string,
+  value: any,
+  expiryTime?: number | string | MSTimeTableType
+) => void;
 
 class Lookie {
-  static set(
-    key: string,
-    value: any,
-    expiryTime?: number | string | TimeObjType
-  ) {
+  static msTimeTable: MSTimeTableType = {
+    Y: 31556926000,
+    M: 2629743830,
+    D: 86400000,
+    h: 3600000,
+    m: 60000,
+    s: 1000,
+  };
+
+  static set: SetFuncType = (key, value, expiryTime?) => {
     if (!key || !value) {
       return;
     }
@@ -13,9 +28,9 @@ class Lookie {
     let expiryTimeMs = 0;
 
     if (expiryTime instanceof Object) {
-      expiryTimeMs = this.timeObjToMs(expiryTime);
+      expiryTimeMs = Lookie.timeObjToMs(expiryTime);
     } else if (typeof expiryTime === "string") {
-      expiryTimeMs = this.stringToMs(expiryTime);
+      expiryTimeMs = Lookie.stringToMs(expiryTime);
     } else if (typeof expiryTime === "number") {
       expiryTimeMs = expiryTime;
     }
@@ -32,10 +47,14 @@ class Lookie {
       });
     }
 
-    localStorage.setItem(key, data);
-  }
+    if (typeof data !== "string") {
+      data = JSON.stringify(data);
+    }
 
-  static get(key: string) {
+    localStorage.setItem(key, data);
+  };
+
+  static get: GetFuncType = (key) => {
     const dataStr = localStorage.getItem(key);
 
     if (!dataStr) {
@@ -59,25 +78,14 @@ class Lookie {
     } catch (err) {
       return dataStr;
     }
-  }
+  };
 
-  static remove(key: string) {
+  static remove: RemoveFuncType = (key) => {
     localStorage.removeItem(key);
-  }
+  };
 
-  static getTimeTable(): TimeObjType {
-    return {
-      Y: 31556926,
-      M: 2629743.83,
-      D: 86400,
-      h: 3600,
-      m: 60,
-      s: 1,
-    };
-  }
-
-  static timeObjToMs(timeObj: TimeObjType): number {
-    const timeTable: TimeObjType = this.getTimeTable();
+  static timeObjToMs: TimeObjToMSFuncType = (timeObj) => {
+    const msTimeTable = Lookie.msTimeTable;
 
     let totalTime = 0;
 
@@ -85,28 +93,28 @@ class Lookie {
       const current = timeObj[key];
 
       if (current && typeof current === "number") {
-        totalTime = current * timeTable[key];
+        totalTime = current * msTimeTable[key];
       }
     });
 
-    return totalTime * 1000;
-  }
+    return totalTime;
+  };
 
-  static stringToMs(timeStr: string): number {
-    const timeTable: TimeObjType = this.getTimeTable();
+  static stringToMs: StringToMSFuncType = (timeStr) => {
+    const msTimeTable = Lookie.msTimeTable;
     const timeArr = timeStr.split(" ");
     let totalTime = 0;
 
-    Object.keys(timeTable).forEach((key) => {
+    Object.keys(msTimeTable).forEach((key) => {
       timeArr.forEach((time) => {
         if (time.indexOf(key) > -1 && parseInt(time)) {
-          totalTime = parseInt(time) * timeTable[key];
+          totalTime = parseInt(time) * msTimeTable[key];
         }
       });
     });
 
-    return totalTime * 1000;
-  }
+    return totalTime;
+  };
 }
 
 export default Lookie;
