@@ -2,6 +2,7 @@ type MSTimeTableType = { [key: string]: number };
 
 type TimeObjToMSFuncType = (timeObj: MSTimeTableType) => number;
 type StringToMSFuncType = (timeStr: string) => number;
+type SyncFuncType = () => void;
 type GetFuncType = (key: string) => any;
 type RemoveFuncType = (key: string) => void;
 type SetFuncType = (
@@ -82,6 +83,10 @@ class Lookie {
 
   static remove: RemoveFuncType = (key) => {
     localStorage.removeItem(key);
+  };
+
+  static sync: SyncFuncType = () => {
+    Object.keys(localStorage).forEach((key) => Lookie.get(key));
   };
 
   static timeObjToMs: TimeObjToMSFuncType = (timeObj) => {

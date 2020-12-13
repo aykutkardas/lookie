@@ -41,8 +41,17 @@ lookie.get("key");
 ```
 
 ### Remove
+
 ```js
 lookie.remove("key");
+```
+
+### Sync
+
+The data is checked only when called and deleted if the expiration date has passed. Therefore, even if they have expired, they continue to be stored until you call them. Just run this method if you want LocalStorage to stay up to date.
+
+```js
+lookie.sync();
 ```
 
 ## Advanced
@@ -58,7 +67,7 @@ lookie.set("key", value, "1M 15D 7h");
 ### Available Time Ranges
 
 | Key | Name   |
-|-----|--------|
+| --- | ------ |
 | Y   | Year   |
 | M   | Month  |
 | D   | Day    |
