@@ -22,7 +22,7 @@ class Lookie {
   };
 
   static set: SetFuncType = (key, value, expiryTime?) => {
-    if (!key || !value) {
+    if (!key || typeof value === "undefined") {
       return;
     }
 
