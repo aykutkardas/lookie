@@ -1,6 +1,6 @@
 {
   "name": "lookie",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "LocalStorage with expiry time support.",
   "main": "dist/index.js",
   "scripts": {
