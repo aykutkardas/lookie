@@ -1,11 +1,19 @@
 # lookie
 
-It allows you to call the data in localStorage by parsing and save it by converting it to string. You can also specify a expirytime for the data you define.
+[![npm](https://img.shields.io/npm/v/lookie?color=%234fc921)](https://www.npmjs.com/package/lookie)
+[![Build Status](https://github.com/aykutkardas/lookie/workflows/build/badge.svg?color=%234fc921)](https://github.com/aykutkardas/lookie/actions)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?color=%234fc921)](https://opensource.org/licenses/MIT)
+
+You can store your data in LocalStorage without converting it to string. You can specify how long this data will be stored in LocalStorage. Lookie is a small package without dependencies and has type support.
 
 ## Install
 
 ```
 npm install lookie
+```
+
+```
+yarn add lookie
 ```
 
 ## Usage
@@ -54,15 +62,7 @@ The data is checked only when called and deleted if the expiration date has pass
 lookie.sync();
 ```
 
-## Advanced
-
-```js
-lookie.set("key", value, { M: 1, D: 15, h: 7 });
-// 1 Month 15 Days 7 hours
-
-lookie.set("key", value, "1M 15D 7h");
-// 1 Month 15 Days 7 hours
-```
+## More Information About Expiry Support
 
 ### Available Time Ranges
 
@@ -74,3 +74,13 @@ lookie.set("key", value, "1M 15D 7h");
 | h   | Hour   |
 | m   | Minute |
 | s   | Second |
+
+### Sample
+
+```js
+lookie.set("key", value, { M: 1, D: 15, h: 7 });
+// 1 Month 15 Days 7 hours
+
+lookie.set("key", value, "1M 15D 7h");
+// 1 Month 15 Days 7 hours
+```
