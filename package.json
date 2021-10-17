@@ -1,7 +1,7 @@
 {
   "name": "lookie",
   "version": "0.5.0",
-  "description": "LocalStorage with expiry time support.",
+  "description": "Store your data in localStorage with optional expiration time. Almost like a cookie.",
   "main": "dist/index.js",
   "scripts": {
     "test": "mocha -r ts-node/register src/*.spec.ts",
@@ -13,12 +13,13 @@
   },
   "keywords": [
     "localStorage",
+    "localStorage-api",
     "cookie",
     "utils",
     "expiry"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Aykut Kardaş <aykutkrds@gmail.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/aykutkardas/lookie/issues"
   },
