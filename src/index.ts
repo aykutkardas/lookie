@@ -1,5 +1,15 @@
-type MSTimeTable = { [key: string]: number };
+type MSTimeTable = {
+  Y?: number;
+  M?: number;
+  D?: number;
+  h?: number;
+  m?: number;
+  s?: number;
+};
+
 type ExpiryTime = number | string | MSTimeTable;
+
+type Data = { value: any; expiry?: number };
 
 export const MS_TIME_TABLE: MSTimeTable = {
   Y: 31556926000,
@@ -58,20 +68,13 @@ class Lookie {
     const now = new Date().getTime();
     const expiry = now + expiryTimeMs;
 
-    let data = value;
+    const data: Data = { value };
 
     if (expiryTimeMs) {
-      data = JSON.stringify({
-        value,
-        expiry,
-      });
+      data.expiry = expiry;
     }
 
-    if (typeof data !== "string") {
-      data = JSON.stringify(data);
-    }
-
-    localStorage.setItem(key, data);
+    localStorage.setItem(key, JSON.stringify(data));
   };
 
   static get = (key: string): any => {
@@ -90,8 +93,6 @@ class Lookie {
           localStorage.removeItem(key);
           return null;
         }
-      } else {
-        return item;
       }
 
       return item.value;
