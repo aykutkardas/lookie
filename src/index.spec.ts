@@ -12,6 +12,12 @@ describe("Lookie Methods Tests", () => {
     expect(true).to.equal(JSON.parse(localStorage.getItem("caseSet")).value);
   });
 
+  it("Set All", () => {
+    lookie.setAll({ caseOne: "test1", caseTwo: "test2" });
+    expect("test1").to.equal(JSON.parse(localStorage.getItem("caseOne")).value);
+    expect("test2").to.equal(JSON.parse(localStorage.getItem("caseTwo")).value);
+  });
+
   it("Get", () => {
     expect(true).to.equal(lookie.get("caseSet"));
   });
@@ -73,6 +79,17 @@ describe("Lookie Methods Tests", () => {
     setTimeout(() => {
       expect(null).to.equal(lookie.get("caseSetWithExpiryObjectType"));
     }, 1100);
+  });
+
+  it("SetAll with Expiry[number]", () => {
+    lookie.setAll({ caseOne: "test1", caseTwo: "test2" }, 100); // 100ms
+    expect("test1").to.equal(lookie.get("caseOne"));
+    expect("test2").to.equal(lookie.get("caseTwo"));
+
+    setTimeout(() => {
+      expect(null).to.equal(lookie.get("caseOne"));
+      expect(null).to.equal(lookie.get("caseTwo"));
+    }, 200);
   });
 
   it("Sync", () => {

@@ -77,6 +77,14 @@ class Lookie {
     localStorage.setItem(key, JSON.stringify(data));
   };
 
+  static setAll = (obj: Object, expiryTime?: ExpiryTime): void => {
+    if (typeof obj !== "object") return;
+
+    Object.entries(obj).forEach(([key, value]) => {
+      Lookie.set(key, value, expiryTime);
+    });
+  };
+
   static get = (key: string): any => {
     const dataStr = localStorage.getItem(key);
 
