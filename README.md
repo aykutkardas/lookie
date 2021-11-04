@@ -40,6 +40,22 @@ lookie.set("key", value, { s: 10 }); // 10 seconds
 lookie.set("key", value, "10s"); // 10 seconds
 ```
 
+### Set All
+
+```js
+lookie.setAll({ key: value, otherKey: otherValue });
+```
+
+### Set All (with Expiry)
+
+```js
+lookie.setAll({ key: value, otherKey: otherValue }, 10000); // 10 seconds
+
+lookie.setAll({ key: value, otherKey: otherValue }, { s: 10 }); // 10 seconds
+
+lookie.setAll({ key: value, otherKey: otherValue }, "10s"); // 10 seconds
+```
+
 > According to this example, when you want to get this data 10 seconds after setting, it will be deleted and you will not be able to access it.
 
 ### Get
