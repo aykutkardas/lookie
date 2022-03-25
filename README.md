@@ -24,13 +24,27 @@ yarn add lookie
 import lookie from "lookie";
 ```
 
-### Set
+### **Set**
+
+Type conversions are handled automatically.
+
+So you can give values such as `array`, `object`, `boolean`, `number`, `null` or `string`.
 
 ```js
-lookie.set("key", value);
+lookie.set("list", [1, 2, 3, 4]);
+
+lookie.set("data", { key: "value" });
+
+lookie.set("count", 1234);
+
+lookie.set("muted", true);
+
+lookie.set("theme", "dark");
+
+lookie.set("user", null);
 ```
 
-### Set with Expiry
+### **Set with Expiry**
 
 ```js
 lookie.set("key", value, "1M 15D 20h"); // 1 month 30 days 20 hours
@@ -38,31 +52,31 @@ lookie.set("key", value, "1M 15D 20h"); // 1 month 30 days 20 hours
 
 > According to this example, when you want to get this data `1 month 30 days 20 hours` after setting, it will be deleted and you will not be able to access it.
 
-### Multiple Set
+### **Multiple Set**
 
 ```js
 lookie.setAll({ key: value, otherKey: otherValue });
 ```
 
-### Multiple Set with Expiry
+### **Multiple Set with Expiry**
 
 ```js
 lookie.setAll({ key: value, otherKey: otherValue }, "1M 15D 20h");
 ```
 
-### Get
+### **Get**
 
 ```js
 lookie.get("key");
 ```
 
-### Remove
+### **Remove**
 
 ```js
 lookie.remove("key");
 ```
 
-### Sync
+### **Sync**
 
 Data is checked only when called and deleted if it has expired. Therefore, even if they have expired, they will continue to be stored until you call them. If you want LocalStorage to stay up to date, simply run this method.
 
@@ -74,7 +88,7 @@ lookie.sync();
 
 ## More Information About Expiry Support
 
-### Available Time Ranges
+### **Available Time Ranges**
 
 | Key | Name   |
 | --- | ------ |
@@ -85,7 +99,7 @@ lookie.sync();
 | m   | Minute |
 | s   | Second |
 
-### Sample
+### **Examples**
 
 ```js
 lookie.set("key", value, 1000); // 1 second
