@@ -1,4 +1,13 @@
-export const MS_TIME_TABLE = {
+type MSTimeTable = {
+  Y?: number;
+  M?: number;
+  D?: number;
+  h?: number;
+  m?: number;
+  s?: number;
+};
+
+export const MS_TIME_TABLE: MSTimeTable = {
   Y: 31556926000,
   M: 2629743830,
   D: 86400000,
@@ -6,8 +15,6 @@ export const MS_TIME_TABLE = {
   m: 60000,
   s: 1000,
 };
-
-type MSTimeTable = typeof MS_TIME_TABLE;
 
 type ExpiryTime = number | string | MSTimeTable;
 
