@@ -47,10 +47,10 @@ lookie.set("user", null);
 ### **Set with Expiry**
 
 ```js
-lookie.set("key", value, "1M 15D 20h"); // 1 month 30 days 20 hours
+lookie.set("key", value, "1M 15D 20h"); // 1 month 15 days 20 hours
 ```
 
-> According to this example, when you want to get this data `1 month 30 days 20 hours` after setting, it will be deleted and you will not be able to access it.
+> According to this example, when you want to get this data `1 month 15 days 20 hours` after setting, it will be deleted and you will not be able to access it.
 
 ### **Multiple Set**
 
