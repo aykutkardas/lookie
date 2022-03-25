@@ -1,8 +1,8 @@
-# lookie
-
 [![npm](https://img.shields.io/npm/v/lookie?color=%234fc921)](https://www.npmjs.com/package/lookie)
 [![Build Status](https://github.com/aykutkardas/lookie/workflows/build/badge.svg?color=%234fc921)](https://github.com/aykutkardas/lookie/actions)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?color=%234fc921)](https://opensource.org/licenses/MIT)
+
+![Lookie](./logo.png)
 
 You can store your data in LocalStorage without converting it to string. You can specify how long this data will be stored in LocalStorage. Lookie is a small package without dependencies and has type support.
 
@@ -30,32 +30,24 @@ import lookie from "lookie";
 lookie.set("key", value);
 ```
 
-### Set (with Expiry)
+### Set with Expiry
 
 ```js
-lookie.set("key", value, 10000); // 10 seconds
-
-lookie.set("key", value, { s: 10 }); // 10 seconds
-
-lookie.set("key", value, "10s"); // 10 seconds
+lookie.set("key", value, "1M 15D 20h"); // 1 month 30 days 20 hours
 ```
 
-> According to this example, when you want to get this data 10 seconds after setting, it will be deleted and you will not be able to access it.
+> According to this example, when you want to get this data `1 month 30 days 20 hours` after setting, it will be deleted and you will not be able to access it.
 
-### Set All
+### Multiple Set
 
 ```js
 lookie.setAll({ key: value, otherKey: otherValue });
 ```
 
-### Set All (with Expiry)
+### Multiple Set with Expiry
 
 ```js
-lookie.setAll({ key: value, otherKey: otherValue }, 10000); // 10 seconds
-
-lookie.setAll({ key: value, otherKey: otherValue }, { s: 10 }); // 10 seconds
-
-lookie.setAll({ key: value, otherKey: otherValue }, "10s"); // 10 seconds
+lookie.setAll({ key: value, otherKey: otherValue }, "1M 15D 20h");
 ```
 
 ### Get
@@ -72,7 +64,9 @@ lookie.remove("key");
 
 ### Sync
 
-The data is checked only when called and deleted if the expiration date has passed. Therefore, even if they have expired, they continue to be stored until you call them. Just run this method if you want LocalStorage to stay up to date.
+Data is checked only when called and deleted if it has expired. Therefore, even if they have expired, they will continue to be stored until you call them. If you want LocalStorage to stay up to date, simply run this method.
+
+Unless you have a special reason, you won't need it at all.
 
 ```js
 lookie.sync();
@@ -94,9 +88,9 @@ lookie.sync();
 ### Sample
 
 ```js
-lookie.set("key", value, { M: 1, D: 15, h: 7 });
-// 1 Month 15 Days 7 hours
+lookie.set("key", value, 1000); // 1 second
 
-lookie.set("key", value, "1M 15D 7h");
-// 1 Month 15 Days 7 hours
+lookie.set("key", value, { s: 1 }); // 1 second
+
+lookie.set("key", value, "1s"); // 1second
 ```
