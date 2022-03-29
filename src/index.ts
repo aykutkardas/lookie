@@ -20,73 +20,77 @@ type ExpiryTime = number | string | MSTimeTable;
 
 type Data = { value: any; expiry?: number };
 
-export const convertObjToMS = (timeObj: MSTimeTable): number => {
-  let totalTime = 0;
-
-  Object.keys(timeObj).forEach((key) => {
-    const current = timeObj[key];
-
-    if (current && typeof current === "number") {
-      totalTime = current * MS_TIME_TABLE[key];
-    }
-  });
-
-  return totalTime;
-};
-
-export const convertStringToMS = (timeStr: string): number => {
-  const timeArr = timeStr.split(" ");
-  let totalTime = 0;
-
-  timeArr.forEach((time) => {
-    const key = /[YMDhms]/g.exec(time);
-    const parsedTime = parseInt(time);
-
-    if (!key || !parsedTime) return;
-
-    const currentTime = MS_TIME_TABLE[key[0]];
-
-    totalTime = parseInt(time) * currentTime;
-  });
-
-  return totalTime;
-};
-
 class Lookie {
-  static set = (key: string, value: any, expiryTime?: ExpiryTime) => {
-    if (!key || typeof value === "undefined") return;
+  private convertObjToMS(timeObj: MSTimeTable): number {
+    let totalTime = 0;
 
+    Object.keys(timeObj).forEach((key) => {
+      const current = timeObj[key];
+
+      if (current && typeof current === "number") {
+        totalTime = current * MS_TIME_TABLE[key];
+      }
+    });
+
+    return totalTime;
+  }
+
+  private convertStringToMS(timeStr: string): number {
+    const timeArr = timeStr.split(" ");
+    let totalTime = 0;
+
+    timeArr.forEach((time) => {
+      const key = /[YMDhms]/g.exec(time);
+      const parsedTime = parseInt(time);
+
+      if (!key || !parsedTime) return;
+
+      const currentTime = MS_TIME_TABLE[key[0]];
+
+      totalTime = parseInt(time) * currentTime;
+    });
+
+    return totalTime;
+  }
+
+  private getExpiryTime(expiryTime: ExpiryTime): number {
     let expiryTimeMs = 0;
 
     if (expiryTime instanceof Object) {
-      expiryTimeMs = convertObjToMS(expiryTime);
+      expiryTimeMs = this.convertObjToMS(expiryTime);
     } else if (typeof expiryTime === "string") {
-      expiryTimeMs = convertStringToMS(expiryTime);
+      expiryTimeMs = this.convertStringToMS(expiryTime);
     } else if (typeof expiryTime === "number") {
       expiryTimeMs = expiryTime;
     }
+
+    return expiryTimeMs;
+  }
+
+  public set(key: string, value: any, expiryTime?: ExpiryTime) {
+    if (!key || typeof value === "undefined") return;
+
+    let expiryTimeMs = this.getExpiryTime(expiryTime);
 
     const now = new Date().getTime();
     const expiry = now + expiryTimeMs;
 
     const data: Data = { value };
 
-    if (expiryTimeMs) {
-      data.expiry = expiry;
-    }
+    if (expiryTimeMs) data.expiry = expiry;
 
     localStorage.setItem(key, JSON.stringify(data));
-  };
+  }
 
-  static setAll = (obj: Object, expiryTime?: ExpiryTime) => {
+  public setAll(obj: Object, expiryTime?: ExpiryTime) {
     if (typeof obj !== "object") return;
 
-    Object.entries(obj).forEach(([key, value]) => {
-      Lookie.set(key, value, expiryTime);
-    });
-  };
+    Object.entries(obj).forEach(([key, value]) =>
+      this.set(key, value, expiryTime)
+    );
+  }
 
-  static get = (key: string): any => {
+  public get(key: string): any {
     const dataStr = localStorage.getItem(key);
 
     if (!dataStr) return null;
@@ -104,15 +108,15 @@ class Lookie {
     } catch (err) {
       return dataStr;
     }
-  };
+  }
 
-  static remove = (key: string) => {
+  public remove(key: string) {
     localStorage.removeItem(key);
-  };
+  }
 
-  static sync = () => {
-    Object.keys(localStorage).forEach(Lookie.get);
-  };
+  public sync() {
+    Object.keys(localStorage).forEach(this.get);
+  }
 }
 
-export default Lookie;
+export default new Lookie();
