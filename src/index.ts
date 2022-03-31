@@ -28,7 +28,7 @@ class Lookie {
       const current = timeObj[key];
 
       if (current && typeof current === "number") {
-        totalTime = current * MS_TIME_TABLE[key];
+        totalTime += current * MS_TIME_TABLE[key];
       }
     });
 
@@ -47,7 +47,7 @@ class Lookie {
 
       const currentTime = MS_TIME_TABLE[key[0]];
 
-      totalTime = parseInt(time) * currentTime;
+      totalTime += parseInt(time) * currentTime;
     });
 
     return totalTime;
