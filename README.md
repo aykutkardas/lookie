@@ -31,10 +31,10 @@ npm install lookie
 import lookie from "lookie";
 
 lookie.set("theme", "dark");
-lookie.set("session", { id: 42 }, "30m"); // expires in 30 minutes
+lookie.set("draft", { title: "Hello" }, "30m"); // expires in 30 minutes
 
 lookie.get("theme"); // "dark"
-lookie.get("session"); // { id: 42 }, or null after 30 minutes
+lookie.get("draft"); // { title: "Hello" }, or null after 30 minutes
 ```
 
 > Using CommonJS? `const lookie = require("lookie").default;`
@@ -52,7 +52,7 @@ lookie.set("count", 1234);
 lookie.set("muted", true);
 lookie.set("user", null);
 
-lookie.set("token", "abc", "1M 15D 20h"); // 1 month 15 days 20 hours
+lookie.set("bannerDismissed", true, "1M 15D 20h"); // 1 month 15 days 20 hours
 ```
 
 Returns `true` if the value was stored. Returns `false` if the key is empty, the value is `undefined`, or storage is full or unavailable.
