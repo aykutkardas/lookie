@@ -2,10 +2,11 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "target": "es5",
+    "module": "commonjs",
+    "strict": true,
     "declaration": true,
     "declarationMap": true,
-    "experimentalDecorators": true,
-    "lib": ["dom", "es6", "es5", "es2017"],
+    "lib": ["dom", "es2017"],
     "removeComments": true
   },
   "include": ["./src/**/*"],

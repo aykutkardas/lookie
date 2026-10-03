@@ -1,110 +1,132 @@
-[![npm](https://img.shields.io/npm/v/lookie?color=%234fc921)](https://www.npmjs.com/package/lookie)
-[![Build Status](https://github.com/aykutkardas/lookie/workflows/build/badge.svg?color=%234fc921)](https://github.com/aykutkardas/lookie/actions)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?color=%234fc921)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/aykutkardas/lookie/main/logo.png" alt="Lookie" width="164" />
+</p>
 
-![Lookie](./logo.png)
+<p align="center">
+  Store data in <code>localStorage</code> with an optional expiration time. Almost like a cookie.
+</p>
 
-You can store your data in LocalStorage without converting it to string. You can specify how long this data will be stored in LocalStorage. Lookie is a small package without dependencies and has type support.
+<p align="center">
+  <a href="https://www.npmjs.com/package/lookie"><img src="https://img.shields.io/npm/v/lookie?color=4fc921" alt="npm version" /></a>
+  <a href="https://github.com/aykutkardas/lookie/actions/workflows/main.yml"><img src="https://github.com/aykutkardas/lookie/actions/workflows/main.yml/badge.svg" alt="Build status" /></a>  <a href="./LICENSE"><img src="https://img.shields.io/npm/l/lookie?color=4fc921" alt="License: MIT" /></a>
+</p>
+
+## Features
+
+- **No manual `JSON.stringify` / `JSON.parse`.** Arrays, objects, numbers and booleans come back as they went in.
+- **Expiry in any form:** milliseconds, `"1D 12h"`, `{ D: 1, h: 12 }` or a `Date`.
+- **Safe everywhere:** doesn't throw during SSR, in private mode or when storage is full.
+- **Plays well with others:** keys written without lookie are left alone.
+- **Tiny:** no dependencies, TypeScript types included.
 
 ## Install
 
-```
+```sh
 npm install lookie
 ```
 
-```
-yarn add lookie
-```
-
-## Usage
-
-### Import
+## Quick start
 
 ```js
 import lookie from "lookie";
+
+lookie.set("theme", "dark");
+lookie.set("draft", { title: "Hello" }, "30m"); // expires in 30 minutes
+
+lookie.get("theme"); // "dark"
+lookie.get("draft"); // { title: "Hello" }, or null after 30 minutes
 ```
 
-### **Set**
+> Using CommonJS? `const lookie = require("lookie").default;`
 
-Type conversions are handled automatically.
+## API
 
-So you can give values such as `array`, `object`, `boolean`, `number`, `null` or `string`.
+### `set(key, value, expiry?)`
+
+Stores `value` under `key`. `expiry` is optional; see [Expiry](#expiry).
 
 ```js
 lookie.set("list", [1, 2, 3, 4]);
-
 lookie.set("data", { key: "value" });
-
 lookie.set("count", 1234);
-
 lookie.set("muted", true);
-
-lookie.set("theme", "dark");
-
 lookie.set("user", null);
+
+lookie.set("bannerDismissed", true, "1M 15D 20h"); // 1 month 15 days 20 hours
 ```
 
-### **Set with Expiry**
+Returns `true` if the value was stored. Returns `false` if the key is empty, the value is `undefined`, or storage is full or unavailable.
+
+### `setAll(object, expiry?)`
+
+Stores every key of `object`, all with the same expiry.
 
 ```js
-lookie.set("key", value, "1M 15D 20h"); // 1 month 15 days 20 hours
+lookie.setAll({ theme: "dark", lang: "en" }, "1Y");
 ```
 
-> According to this example, when you want to get this data `1 month 15 days 20 hours` after setting, it will be deleted and you will not be able to access it.
+Returns `true` if every value was stored.
 
-### **Multiple Set**
+### `get(key)`
+
+Returns the stored value, or `null` if the key doesn't exist or has expired. Expired data is deleted when you read it.
 
 ```js
-lookie.setAll({ key: value, otherKey: otherValue });
+lookie.get("list"); // [1, 2, 3, 4]
+
+// TypeScript
+lookie.get<number[]>("list");
 ```
 
-### **Multiple Set with Expiry**
+Keys written without lookie (e.g. `localStorage.setItem("lang", "en")`) are returned as their raw string.
+
+### `remove(key)`
 
 ```js
-lookie.setAll({ key: value, otherKey: otherValue }, "1M 15D 20h");
+lookie.remove("theme");
 ```
 
-### **Get**
+### `sync()`
 
-```js
-lookie.get("key");
-```
-
-### **Remove**
-
-```js
-lookie.remove("key");
-```
-
-### **Sync**
-
-Data is checked only when called and deleted if it has expired. Therefore, even if they have expired, they will continue to be stored until you call them. If you want LocalStorage to stay up to date, simply run this method.
-
-Unless you have a special reason, you won't need it at all.
+Expired data is only deleted when you read it with `get`. Call `sync` to remove every expired lookie entry at once, for example on app start. Keys not written by lookie are never touched.
 
 ```js
 lookie.sync();
 ```
 
-## More Information About Expiry Support
+## Expiry
 
-### **Available Time Ranges**
+| Form      | Example                              | Meaning                    |
+| --------- | ------------------------------------ | -------------------------- |
+| `number`  | `60000`                              | 60 000 ms from now         |
+| `string`  | `"1h30m"`, `"1D 12h"`, `"1.5D"`      | Duration from now          |
+| `object`  | `{ D: 1, h: 12 }`                    | Duration from now          |
+| `Date`    | `new Date("2030-01-01")`             | Expires at that moment     |
 
-| Key | Name   |
-| --- | ------ |
-| Y   | Year   |
-| M   | Month  |
-| D   | Day    |
-| h   | Hour   |
-| m   | Minute |
-| s   | Second |
+Omitting the expiry, or passing `0`, stores the data with no expiry.
 
-### **Examples**
+### Units
 
-```js
-lookie.set("key", value, 1000); // 1 second
+| Unit | Name        |
+| ---- | ----------- |
+| `Y`  | Year        |
+| `M`  | Month       |
+| `D`  | Day         |
+| `h`  | Hour        |
+| `m`  | Minute      |
+| `s`  | Second      |
+| `ms` | Millisecond |
 
-lookie.set("key", value, { s: 1 }); // 1 second
+Units are case-sensitive: `M` is month, `m` is minute. A month counts as 30.44 days and a year as 365.24 days.
 
-lookie.set("key", value, "1s"); // 1second
-```
+If an expiry can't be parsed (e.g. `"2days"`, `"1d"`, `"1w"`), lookie logs a warning and stores the data **without** expiry.
+
+## Good to know
+
+- **Only JSON-safe values survive.** Values are stored with `JSON.stringify`, so a `Date` comes back as a string, `Map` and `Set` come back as `{}`, and `BigInt` or circular objects throw.
+- **SSR.** When `localStorage` isn't available, `set` returns `false` and `get` returns `null`. Nothing throws.
+- **Security.** Any script on your page can read `localStorage`. Don't store tokens, passwords or other sensitive data in it.
+
+## License
+
+[MIT](./LICENSE) © Aykut Kardaş
