@@ -6,8 +6,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "src/index.ts",
-    "logo.png"
+    "src/index.ts"
   ],
   "scripts": {
     "test": "node --test \"src/*.spec.ts\"",
