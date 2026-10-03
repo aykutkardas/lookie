@@ -26,9 +26,11 @@ import lookie from "lookie";
 
 ### **Set**
 
-Type conversions are handled automatically.
+Values are serialized with `JSON.stringify`, so you can give values such as `array`, `object`, `boolean`, `number`, `null` or `string`.
 
-So you can give values such as `array`, `object`, `boolean`, `number`, `null` or `string`.
+> Values that JSON can't represent are not preserved: a `Date` comes back as a string, `Map`/`Set` come back as `{}`, and `BigInt` or circular objects throw.
+
+`set` returns `true` when the data is stored, and `false` when it isn't (empty key, `undefined` value, storage full or unavailable).
 
 ```js
 lookie.set("list", [1, 2, 3, 4]);
@@ -68,7 +70,12 @@ lookie.setAll({ key: value, otherKey: otherValue }, "1M 15D 20h");
 
 ```js
 lookie.get("key");
+
+// TypeScript
+lookie.get<string[]>("list");
 ```
+
+Returns `null` if the key doesn't exist or has expired. Keys written without lookie (e.g. `localStorage.setItem("theme", "dark")`) are returned as their raw string.
 
 ### **Remove**
 
@@ -86,18 +93,27 @@ Unless you have a special reason, you won't need it at all.
 lookie.sync();
 ```
 
+Only data written by lookie is checked; other keys in LocalStorage are left untouched.
+
+### **Server-Side Rendering**
+
+When `localStorage` is not available (SSR, disabled storage), lookie doesn't throw: `set` returns `false`, `get` returns `null`.
+
 ## More Information About Expiry Support
 
 ### **Available Time Ranges**
 
-| Key | Name   |
-| --- | ------ |
-| Y   | Year   |
-| M   | Month  |
-| D   | Day    |
-| h   | Hour   |
-| m   | Minute |
-| s   | Second |
+| Key | Name        |
+| --- | ----------- |
+| Y   | Year        |
+| M   | Month       |
+| D   | Day         |
+| h   | Hour        |
+| m   | Minute      |
+| s   | Second      |
+| ms  | Millisecond |
+
+Units are case-sensitive (`M` is month, `m` is minute). A month is 30.44 days and a year is 365.24 days.
 
 ### **Examples**
 
@@ -106,5 +122,17 @@ lookie.set("key", value, 1000); // 1 second
 
 lookie.set("key", value, { s: 1 }); // 1 second
 
-lookie.set("key", value, "1s"); // 1second
+lookie.set("key", value, "1s"); // 1 second
+
+lookie.set("key", value, "1h30m"); // 1 hour 30 minutes
+
+lookie.set("key", value, "1.5D"); // 36 hours
+
+lookie.set("key", value, new Date("2030-01-01")); // until a specific date
 ```
+
+If the expiry can't be parsed (e.g. `"2days"`, `"1d"`, `"1w"`), a warning is logged and the data is stored **without** expiry.
+
+## Security
+
+LocalStorage can be read by any script running on your page. Don't store tokens, passwords or other sensitive data in it.
